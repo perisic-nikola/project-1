@@ -1,0 +1,23 @@
+name: Docker Compose Integration Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-stack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Build and run health check
+        run: |
+          docker compose up --build --abort-on-container-exit --exit-code-from monitor
+
+      - name: Tear down stack
+        if: always()
+        run: docker compose down -v

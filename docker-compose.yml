@@ -1,0 +1,12 @@
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+
+  monitor:
+    build: .
+    image: devops-healthcheck:1.0
+    depends_on:
+      - web
+    command: ["/usr/local/bin/healthcheck.sh", "http://web:80"]
